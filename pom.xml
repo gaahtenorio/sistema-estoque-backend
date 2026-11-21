@@ -69,6 +69,13 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Banco em memória usado SOMENTE nos testes automatizados.
+		     Não interfere no PostgreSQL de desenvolvimento/produção. -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
