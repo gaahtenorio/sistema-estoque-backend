@@ -3,34 +3,21 @@ package com.supermercado.estoque.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
-/**
- * ============================================================================
- * ATENÇÃO — ARQUIVO PROVISÓRIO (STUB) — RESPONSÁVEL: PESSOA 5 (PRODUTOS)
- * ============================================================================
- * Este arquivo existe só para o relacionamento Categoria 1:N Produto compilar,
- * porque a Categoria precisa da classe Produto para o {@code mappedBy}.
- *
- * A Pessoa 5 deve COMPLETAR esta entidade com os campos do projeto
- * (codigoBarras, preco, quantidadeEmEstoque, estoqueMinimo etc.), mantendo:
- *   - a tabela "produtos";
- *   - o {@code @ManyToOne} para Categoria com a coluna "categoria_id";
- *   - a coluna "categoria_id" como NOT NULL (todo produto tem uma categoria).
- *
- * Contrato detalhado em: docs/API-CATEGORIAS.md
- * ============================================================================
- */
 @Entity
 @Table(name = "produtos")
 public class Produto {
@@ -44,11 +31,26 @@ public class Produto {
     @Column(name = "nome", nullable = false, length = 120)
     private String nome;
 
-    /** Lado dono do relacionamento: gera a coluna categoria_id na tabela produtos. */
+    @Column(name = "codigo_barras", length = 50)
+    private String codigoBarras;
+
+    @Column(name = "preco", precision = 10, scale = 2)
+    private BigDecimal preco;
+
+    @NotNull(message = "A quantidade em estoque é obrigatória")
+    @Min(value = 0, message = "A quantidade em estoque não pode ser negativa")
+    @Column(name = "quantidade_em_estoque", nullable = false)
+    private Integer quantidadeEmEstoque = 0;
+
+    @NotNull(message = "O estoque mínimo é obrigatório")
+    @Min(value = 0, message = "O estoque mínimo não pode ser negativo")
+    @Column(name = "estoque_minimo", nullable = false)
+    private Integer estoqueMinimo = 5;
+
     @NotNull(message = "A categoria do produto é obrigatória")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "categoria_id", nullable = false,
-            foreignKey = @jakarta.persistence.ForeignKey(name = "fk_produto_categoria"))
+            foreignKey = @ForeignKey(name = "fk_produto_categoria"))
     private Categoria categoria;
 
     public Produto() {
@@ -57,6 +59,15 @@ public class Produto {
     public Produto(String nome, Categoria categoria) {
         this.nome = nome;
         this.categoria = categoria;
+        this.quantidadeEmEstoque = 0;
+        this.estoqueMinimo = 5;
+    }
+
+    public Produto(String nome, Categoria categoria, Integer quantidadeEmEstoque, Integer estoqueMinimo) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.quantidadeEmEstoque = quantidadeEmEstoque != null ? quantidadeEmEstoque : 0;
+        this.estoqueMinimo = estoqueMinimo != null ? estoqueMinimo : 5;
     }
 
     public Long getId() {
@@ -73,6 +84,38 @@ public class Produto {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
+
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
+    public Integer getQuantidadeEmEstoque() {
+        return quantidadeEmEstoque;
+    }
+
+    public void setQuantidadeEmEstoque(Integer quantidadeEmEstoque) {
+        this.quantidadeEmEstoque = quantidadeEmEstoque;
+    }
+
+    public Integer getEstoqueMinimo() {
+        return estoqueMinimo;
+    }
+
+    public void setEstoqueMinimo(Integer estoqueMinimo) {
+        this.estoqueMinimo = estoqueMinimo;
     }
 
     public Categoria getCategoria() {
