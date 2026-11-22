@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
+    /** Quantidade de produtos vinculados a uma categoria (usado no DTO e na exclusão). */
     long countByCategoriaId(Long categoriaId);
 
     @Query("""

@@ -1,5 +1,6 @@
 package com.supermercado.estoque.exception;
 
+/** Lançada quando um registro pedido pela URL não existe no banco (HTTP 404). */
 public class RecursoNaoEncontradoException extends RuntimeException {
 
     public RecursoNaoEncontradoException(String mensagem) {
